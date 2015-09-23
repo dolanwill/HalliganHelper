@@ -37,6 +37,7 @@ class EmailAuthenticationForm(AuthenticationForm):
 
     def __init__(self, *args, **kwargs):
         super(EmailAuthenticationForm, self).__init__(*args, **kwargs)
+        print self.fields.keys()
         self.fields['username'].widget = forms.TextInput(attrs={'type': 'email'})
 
 

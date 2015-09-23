@@ -44,8 +44,6 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.static',
-    'ws4redis.context_processors.default',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -208,16 +206,9 @@ BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_ROOT, 'components')
 BOWER_INSTALLED_APPS = ('foundation#5.5.2',
                         'jquery-placeholder#2.0.8',
                         'modernizr#2.8.3',
-                        'jquery#2.1.4',
-                        'fastclick#1.0.6',
-                        'jquery.cookie#1.4.1',
-                        'pickadate#3.5.6',
-                        'underscore#1.8.3',
-                        'backbone#1.2.3',
-                        'moment#2.10.6',
-                        'livestamp#1.1.2',
-                        'socket.io-client#0.9.10',
-                        )
+                        'jquery#2.1.1',
+                        'fastclick#1.0.3',
+                        'jquery.cookie#1.4.1')
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
@@ -262,8 +253,6 @@ PIPELINE_CSS = {
     'all_styles': {
         'source_filenames': (
             'HalliganAvailability/scss/extend_foundation.scss',
-            os.path.join('pickadate', 'lib', 'compressed', 'themes', 'default.css'),
-            os.path.join('pickadate', 'lib', 'compressed', 'themes', 'default.time.css'),
         ),
         'output_filename': 'css/styles.css',
     }
@@ -280,13 +269,12 @@ PIPELINE_JS = {
             'HalliganAvailability/backbone/models/Lab.js',
             'HalliganAvailability/backbone/models/Computer.js',
             'HalliganAvailability/backbone/models/OfficeHour.js',
-            'HalliganAvailability/backbone/models/Request.js',
+            'HalliganAvailability/backbone/models/QueueItem.js',
             'HalliganAvailability/backbone/models/Room.js',
-            'HalliganAvailability/backbone/models/Course.js',
             'HalliganAvailability/backbone/collections/Labs.js',
             'HalliganAvailability/backbone/collections/Computers.js',
             'HalliganAvailability/backbone/collections/OfficeHours.js',
-            'HalliganAvailability/backbone/collections/Requests.js',
+            'HalliganAvailability/backbone/collections/QueueItems.js',
             'HalliganAvailability/backbone/collections/Rooms.js',
             'HalliganAvailability/backbone/views/ComputerView.js',
             'HalliganAvailability/backbone/views/ComputersView.js',
@@ -298,27 +286,11 @@ PIPELINE_JS = {
             'HalliganAvailability/backbone/views/QueueItemsView.js',
             'HalliganAvailability/backbone/views/RoomView.js',
             'HalliganAvailability/backbone/views/RoomsView.js',
-            'HalliganAvailability/backbone/views/CourseView.js',
         ),
         'output_filename': 'js/backbone.js',
     },
-    'packages': {
-        'source_filenames': (
-            'js/ws4redis.js',
-            os.path.join('jquery.cookie', 'jquery.cookie.js'),
-            os.path.join('underscore', 'underscore.js'),
-            os.path.join('backbone', 'backbone.js'),
-            os.path.join('moment', 'min', 'moment.min.js'),
-            os.path.join('livestamp', 'livestamp.min.js'),
-            os.path.join('socket.io-client', 'dist', 'socket.io.min.js'),
-            os.path.join('pickadate', 'lib', 'compressed', 'picker.js'),
-            os.path.join('pickadate', 'lib', 'compressed', 'picker.time.js'),
-        ),
-        'output_filename': 'js/packages.js'
-    },
     'dependencies': {
         'source_filenames': (
-            os.path.join('jquery', 'dist', 'jquery.min.js'),
             'modernizr/modernizr.js',
             'fastclick/lib/fastclick.js',
             'foundation/js/foundation.min.js',
@@ -340,18 +312,3 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 ALLOWED_REGISTRATION_DOMAINS = ('tufts.edu', 'cs.tufts.edu')
-
-
-# Websocket-for-Redis stuff
-
-INSTALLED_APPS += (
-    'ws4redis',
-)
-
-WEBSOCKET_URL = '/ws/'
-WS4REDIS_PREFIX = 'hh'
-TEMPLATE_CONTEXT_PROCESSORS += (
-    'ws4redis.context_processors.default',
-)
-WSGI_APPLICATION = 'ws4redis.django_runserver.application'
-WS4REDIS_HEARTBEAT = '--heartbeat--'

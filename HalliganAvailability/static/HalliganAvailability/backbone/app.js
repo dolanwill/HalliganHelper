@@ -10,4 +10,5 @@ Backbone.View.prototype.showWaiting = function() {
     }
 
     this.$el.append(loading);
+    console.log("waiting");
 };
