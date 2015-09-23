@@ -11,6 +11,7 @@ app.LabsView = Backbone.View.extend({
     },
     template: _.template( $('#labHeaderTemplate').html() ),
     render: function() {
+        console.log("RENDERING LABS");
         this.$el.append( this.template() );
         this.collection.each(function(item) {
             this.renderLab( item );
