@@ -1,5 +1,6 @@
 import logging
 from datetime import timedelta
+import dateutil.parser
 
 from django.contrib.auth import logout
 from django.conf import settings
@@ -25,6 +26,7 @@ from ws4redis.publisher import RedisPublisher
 
 from ..models import (School, Course, Request,
                       Student, OfficeHour, CustomUser)
+from ..tasks import broadcast_message_later
 
 from ..utils import publish_message
 
@@ -137,11 +139,6 @@ class RequestViewSet(CreateModelWithRequestMixin,
 
         created = super(RequestViewSet, self).create(request, course_pk)
 
-        data = {
-            'course': course.pk,
-            'id': created.data['id']
-        }
-
         publish_message('request_created', {
             'course': course.pk,
             'id': created.data['id']
@@ -230,6 +227,14 @@ class OfficeHourViewSet(CreateModelWithRequestMixin,
             'course': course_pk,
             'id': created.data['id'],
         })
+
+        args = ('off_duty', {
+            'course': course_pk,
+            'id': created.data['id'],
+        })
+
+        eta = dateutil.parser.parse(created.data['end_time'])
+        broadcast_message_later.apply_async(args=args, eta=eta)
 
         return created
 
